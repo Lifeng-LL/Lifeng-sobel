@@ -1,0 +1,12 @@
+1. Input images will be resized to a standard size (640x480 in the code) so that they can be processed in batch, image of not standard size can be handled this way. For images that are very large, we may specify a relatively large standard size.
+2. Reflection padding is used to prevent unwanted edges at the image boundaries.
+3. Yes
+4. Yes in general, torchscript can be able to speed up, since it fuses certain operations into a higher efficiency one. Half/mixed precision can also be used to speed up inferencing/training. But this is a very simple network, so none of these tricks are used.
+5. Again, no need for this tiny model, but generally speaking, we can
+   a. convert the model to half precision, or 
+   b. introduce depth-wise/group-wise convolution, or 
+   c. decompose large kernels to 2 cascaded small kernels, say one 11x11 kernel -> 1x11 + 11x1 kernel
+   d. do kernel decomposition or do model pruning, model distillation (with a re-designed light-weighted network) etc.
+   We can even try structural re-parameterization if we need to go that far. 
+6. When training loss doesn't decrease, in other words stable or saturated; and validation loss doesn't increase
+7. Don't see much of benefits for using deeper model for the sobel operation, it's a too easy task, merely operating the pixels. Going deeping means introducing more parameters, it increases the complexity, the difficulty in training and the possibility of overfitting (if we don't have enough data for all parameters). Generally speaking, deeper model can extract features, both low-level and rich in details and high-level and more abstract. This enables the network to solve more complicated downstream problems, such as object-level, image-level or scene-level understanding. 
